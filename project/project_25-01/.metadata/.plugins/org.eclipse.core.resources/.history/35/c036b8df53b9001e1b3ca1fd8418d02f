@@ -1,0 +1,50 @@
+package model;
+
+public class Book {
+private int idBook;
+private String name;
+private String aouther;
+private String isBorrow;
+//private String borrowTo;
+
+public String getName() {
+	return name;
+}
+public void setName(String name) {
+	this.name = name;
+}
+public String getAouther() {
+	return aouther;
+}
+public void setAouther(String aouther) {
+	this.aouther = aouther;
+}
+
+public String getIsBorrow() {
+	return isBorrow;
+}
+
+public int getIdBook() {
+	return idBook;
+}
+public void setIdBook(int idBook) {
+	this.idBook = idBook;
+}
+public void setIsBorrow(String isBorrow) {
+	this.isBorrow = isBorrow;
+}
+@Override
+public String toString() {
+	return "Book [idBook=" + idBook + ", name=" + name + ", aouther=" + aouther + ", isBorrow=" + isBorrow + "]";
+}
+public Book(String name, String aouther, String isBorrow) {
+	super();
+	this.name = name;
+	this.aouther = aouther;
+	this.isBorrow = isBorrow;
+}
+public Book() {
+	// TODO Auto-generated constructor stub
+}
+
+}

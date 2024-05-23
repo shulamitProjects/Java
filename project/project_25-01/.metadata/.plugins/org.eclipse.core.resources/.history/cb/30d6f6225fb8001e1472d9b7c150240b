@@ -1,0 +1,37 @@
+package model;
+
+public class Book {
+private String name;
+private String aouther;
+private boolean isBorrow;
+public String getName() {
+	return name;
+}
+public void setName(String name) {
+	this.name = name;
+}
+public String getAouther() {
+	return aouther;
+}
+public void setAouther(String aouther) {
+	this.aouther = aouther;
+}
+
+public boolean getIsBorrow() {
+	return isBorrow;
+}
+public void setBorrow(boolean isBorrow) {
+	this.isBorrow = isBorrow;
+}
+@Override
+public String toString() {
+	return "Book [name=" + name + ", aouther=" + aouther + ", isBorrow=" + isBorrow + "]";
+}
+public Book(String name, String aouther, boolean isBorrow) {
+	super();
+	this.name = name;
+	this.aouther = aouther;
+	this.isBorrow = isBorrow;
+}
+
+}

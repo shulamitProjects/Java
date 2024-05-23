@@ -1,0 +1,227 @@
+package dao;
+import java.sql.DriverManager;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import model.Book;
+import model.Student;
+
+public class BookDao {
+
+
+		public static String CONNECTION_STR = "jdbc:mysql://localhost:3306/student?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+		
+		public static int registerBook(Book book) throws ClassNotFoundException{
+			System.out.println("book"+book);
+	     String INSERT_STUDENT_SQL = "INSERT INTO Books(name,aouther,isBorrow)"+
+	     " VALUES (?,?,?);";
+		
+	    /// String CONNECTION_STR = "jdbc:mysql://localhost:3306/students?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+	     
+
+			int result = 0;
+//			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			
+			try {
+			Connection connection = DriverManager.getConnection(CONNECTION_STR,"root","1234");
+			
+			if (connection != null) {
+				
+	            System.out.println("Connected to the database books");
+	        }
+			              
+			PreparedStatement preparedStatement = connection.prepareStatement(INSERT_STUDENT_SQL);
+
+			preparedStatement.setString(1,book.getAouther());
+			preparedStatement.setString(2,book.getName());
+			preparedStatement.setString(3,book.getIsBorrow());
+
+			
+			System.out.println(preparedStatement);
+			result = preparedStatement.executeUpdate();
+					
+			}
+			catch(SQLException e) {
+				
+				e.printStackTrace();
+				
+			}
+			return result;
+					
+		}
+		
+		public static Book findBook(int idBook) throws ClassNotFoundException {
+			System.out.println("aaa"+idBook);
+			String SQL="select * from Books where idBook = "+idBook+"";
+			Book b=new Book();
+			System.out.println("!!!!!!!"+SQL);
+	    	Statement stmt;			
+			Class.forName("com.mysql.cj.jdbc.Driver");
+				try {
+				Connection connection = DriverManager.getConnection(CONNECTION_STR,"root","1234");
+
+				if (connection != null) {
+		            System.out.println("Connected to the database books");
+		        }
+				stmt = connection.createStatement();
+					ResultSet rs = stmt.executeQuery(SQL);
+					while(rs.next()) {
+				    b.setName(rs.getString("name"));
+				    b.setAouther(rs.getString("aouther"));
+				    b.setIsBorrow(rs.getString("isBorrow")); 
+				    b.setIdBook(rs.getInt("idBook"));
+				    b.setIdBorrow(rs.getInt("idBorrow"));
+				    System.out.println(b);}
+				rs.close();
+				stmt.close();
+
+			}
+			 catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+			return b;
+		}
+
+		public static void returnBook(int idUser) throws ClassNotFoundException {
+			System.out.println("idUser"+idUser);
+			String SQL="select * from Books where idBorrow like '"+idUser+"'";
+			Book b=new Book();
+			
+	    	Statement stmt;			
+			Class.forName("com.mysql.cj.jdbc.Driver");
+				try {
+				Connection connection = DriverManager.getConnection(CONNECTION_STR,"root","1234");
+
+				if (connection != null) {
+		            System.out.println("Connected to the database books");
+		        }
+				stmt = connection.createStatement();
+					ResultSet rs = stmt.executeQuery(SQL);
+					while(rs.next()) {
+				    b.setName(rs.getString("name"));
+				    b.setAouther(rs.getString("aouther"));
+				    b.setIsBorrow(rs.getString("isBorrow")); 
+				    b.setIdBook(rs.getInt("idBook"));
+				    b.setIdBorrow(0);
+				    System.out.println(b);}
+				rs.close();
+				stmt.close();
+				
+				
+				String SQL2="UPDATE Books SET idBorrow= 0 WHERE (idBook = "+b.getIdBorrow()+");";
+//				String SQL3="UPDATE `student`.`books` SET `isBorrow` = 'false' WHERE (`idBook` = "+b.getIdBorrow()+");";
+//				String SQL4="UPDATE `student`.`studentsimple` SET `idBook` = null WHERE (`id` = "+idUser+");";
+				Statement stmt2;
+				System.out.println("1");
+				Class.forName("com.mysql.cj.jdbc.Driver");
+					try {
+					Connection connection2 = DriverManager.getConnection(CONNECTION_STR,"root","1234");
+					System.out.println("2");
+					if (connection != null) {
+			            System.out.println("Connected to the database books");
+			            System.out.println("3");
+			        }
+					System.out.println("4");
+					stmt2 = connection.createStatement();
+						stmt2.executeQuery(SQL2);
+//						stmt2.executeQuery(SQL3);
+//						stmt2.executeQuery(SQL4);
+						
+					stmt2.close();
+					
+
+			}
+			 catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+		}
+return;
+		}
+		public static List getListOfBooks() throws ClassNotFoundException{
+		List dataList = new ArrayList();
+			
+			String SQL = "select * from books where isBorrow='false'";
+			System.out.println("!!!!!!!"+SQL);
+	    	Statement stmt;
+								
+			Class.forName("com.mysql.cj.jdbc.Driver");
+				
+				try {
+				Connection connection = DriverManager.getConnection(CONNECTION_STR,"root","1234");
+				
+				if (connection != null) {
+					
+		            System.out.println("Connected to the database books");
+		        }
+				stmt = connection.createStatement();
+			       
+				ResultSet rs = stmt.executeQuery(SQL);
+			
+
+	        // Iterate through the data in the result set and display it.
+	       
+				while (rs.next()) {		
+				    System.out.println(rs.getString("name") + " - " + rs.getString("aouther"));
+				    dataList.add(rs.getInt("idBook"));
+				    dataList.add(rs.getString("name"));
+				    dataList.add(rs.getString("aouther"));
+				    dataList.add(rs.getString("isBorrow")); 
+				}
+				
+				rs.close();
+				stmt.close();
+			}
+			 catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}		
+			return dataList;
+		}
+	
+public static Book getMyBook(int book) throws ClassNotFoundException{
+		Book b=new Book();
+
+		String find = "select * from books where idBook="+book;
+		System.out.println("!!!!!!!"+find);
+    	Statement stmt;			
+		Class.forName("com.mysql.cj.jdbc.Driver");
+			try {
+			Connection connection = DriverManager.getConnection(CONNECTION_STR,"root","1234");
+
+			if (connection != null) {
+	            System.out.println("Connected to the database books");
+	        }
+			stmt = connection.createStatement();
+				ResultSet rs = stmt.executeQuery(find);
+				while(rs.next()) {
+
+			    b.setName(rs.getString("name"));
+			    b.setAouther(rs.getString("aouther"));
+			    b.setIsBorrow(rs.getString("isBorrow")); 
+			    b.setIdBook(rs.getInt("idBook"));
+			    b.setIdBorrow(rs.getInt("idBorrow"));
+			    System.out.println(b);}
+			rs.close();
+			stmt.close();
+
+		}
+		 catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		return b;
+	}
+}
+
